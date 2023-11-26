@@ -3,7 +3,6 @@ import { useEffect, useState } from 'react';
 import { Metadata } from "next"
 import Link from 'next/link';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { MainNav } from '../../components/main-nav';
 import TradeCard from "../../components/TradeCard"
 import FloatingDisclaimer from '../../components/FloatingDisclaimer';
 import { Button } from "@/components/ui/button"
@@ -11,9 +10,11 @@ import { ModeToggle } from "../../components/ModeToggle"
 import { ISignalData, IStatsData } from "@/interfaces/signalData"
 import axios from 'axios';
 import PieChart from '@/components/PieChart';
+import { CreatePostion } from './components/createPosition';
 
 export default function DashboardPage() {
   const [signalData, setSignalData] = useState<ISignalData[]>([]);
+  const [dummyData, setDummyData] = useState<ISignalData[]>([]);
   const [statsData, setStatsData] = useState<IStatsData[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [selectedTab, setSelectedTab] = useState<string>('synthetic_index');
@@ -35,8 +36,9 @@ export default function DashboardPage() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get('http://localhost:8080/api/rest/getstats');
+        const response = await axios.get('http://localhost:8080/api/rest/thousand');
         setStatsData(response.data.CreateIncreasePosition);
+        // setDummyData(dummy)
       } catch (error) {
         console.error('Error fetching data:', error);
       }
@@ -59,6 +61,7 @@ export default function DashboardPage() {
 
     return { trueCount, falseCount };
   }
+
 
   const counts = countIsLongValues(statsData);
   // console.log("True count:", counts.trueCount);
@@ -104,15 +107,9 @@ export default function DashboardPage() {
           <Tabs defaultValue="overview" className="space-y-4">
             <TabsList>
               <TabsTrigger value="overview">Trading Signals</TabsTrigger>
-              <TabsTrigger value="analytics">Chart</TabsTrigger>
-              <TabsTrigger value="reports">
-                Reports
-              </TabsTrigger>
-              <TabsTrigger value="notifications">
-                Notifications
-              </TabsTrigger>
+              <TabsTrigger value="analytics">Charts</TabsTrigger>
+              <TabsTrigger value="reports">Excecution</TabsTrigger>
             </TabsList>
-
             <TabsContent value="overview" className="space-y-4">
               <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
                 {signalData ? (
@@ -133,13 +130,14 @@ export default function DashboardPage() {
                   <p>Loading data...</p>
                 )}
               </div>
-              {/* <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
-              </div> */}
             </TabsContent>
             <TabsContent value="analytics" className="space-y-4">
               <div className="w-100 h-100">
                 <PieChart trueCount={counts.trueCount} falseCount={counts.falseCount} />
               </div>
+            </TabsContent>
+            <TabsContent value="reports" className="space-y-4">
+              <CreatePostion />
             </TabsContent>
           </Tabs>
 
