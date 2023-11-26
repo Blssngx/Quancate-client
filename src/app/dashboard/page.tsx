@@ -23,7 +23,7 @@ export default function DashboardPage() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/candlesticks');
+        const response = await axios.get('https://quancate-api-eac733c8bf1f.herokuapp.com/candlesticks');
         setSignalData(response.data);
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -107,8 +107,8 @@ export default function DashboardPage() {
           <Tabs defaultValue="overview" className="space-y-4">
             <TabsList>
               <TabsTrigger value="overview">Trading Signals</TabsTrigger>
-              <TabsTrigger value="analytics">Charts</TabsTrigger>
-              <TabsTrigger value="reports">Excecution</TabsTrigger>
+              <TabsTrigger value="analytics" disabled>Charts</TabsTrigger>
+              <TabsTrigger value="reports" disabled>Excecution</TabsTrigger>
             </TabsList>
             <TabsContent value="overview" className="space-y-4">
               <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
